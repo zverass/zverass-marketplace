@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ панель - ZVERASS</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo"><i class="fas fa-bolt"></i> ZVERASS</a>
+        <nav><ul class="nav"><li><a href="/catalog">Каталог</a></li></ul></nav>
+        <div class="user-menu" id="userMenu"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="padding: 40px 20px;">
+    <h1><i class="fas fa-shield-alt"></i> Админ панель</h1>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-box" style="font-size: 40px; color: var(--warning); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">На модерации</p>
+          <p id="pendingProducts" style="font-size: 24px; font-weight: bold; color: var(--warning);">0</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-money-bill-wave" style="font-size: 40px; color: var(--danger); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">Выводы на проверку</p>
+          <p id="pendingWithdrawals" style="font-size: 24px; font-weight: bold; color: var(--danger);">0</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-ticket-alt" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">Активных промокодов</p>
+          <p id="activeCodes" style="font-size: 24px; font-weight: bold; color: var(--primary);">0</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 30px;">
+      <h2 style="margin-bottom: 20px;">Управление</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <button class="btn btn-primary btn-block" onclick="goTo('products')">
+          <i class="fas fa-cube"></i> Модерация товаров
+        </button>
+        <button class="btn btn-primary btn-block" onclick="goTo('withdrawals')">
+          <i class="fas fa-exchange-alt"></i> Проверка выводов
+        </button>
+        <button class="btn btn-primary btn-block" onclick="goTo('promo')">
+          <i class="fas fa-percentage"></i> Промокоды
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    if (!requireAdminAuth()) return;
+
+    async function loadDashboard() {
+      try {
+        const data = await adminAPI.getDashboard();
+        document.getElementById('pendingProducts').textContent = data.pendingProductsCount || 0;
+        document.getElementById('pendingWithdrawals').textContent = data.pendingWithdrawalsCount || 0;
+        document.getElementById('activeCodes').textContent = '0'; // Реализовать позже
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+
+    function goTo(section) {
+      alert('Раздел ' + section + ' в разработке');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUserMenu();
+      loadDashboard();
+    });
+  </script>
+</body>
+</html>

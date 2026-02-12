@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дашборд продавца - ZVERASS</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo"><i class="fas fa-bolt"></i> ZVERASS</a>
+        <nav><ul class="nav"><li><a href="/catalog">Каталог</a></li></ul></nav>
+        <div class="user-menu" id="userMenu"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="padding: 40px 20px;">
+    <h1><i class="fas fa-chart-line"></i> Дашборд продавца</h1>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-shopping-bag" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">Всего заказов</p>
+          <p id="totalOrders" style="font-size: 24px; font-weight: bold; color: var(--primary);">0</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-check-circle" style="font-size: 40px; color: var(--success); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">Выполнено</p>
+          <p id="completedOrders" style="font-size: 24px; font-weight: bold; color: var(--success);">0</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-wallet" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">Баланс</p>
+          <p id="balance" style="font-size: 24px; font-weight: bold; color: var(--primary);">0 ₽</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="text-align: center;">
+          <i class="fas fa-money-bill-wave" style="font-size: 40px; color: var(--warning); margin-bottom: 15px;"></i>
+          <p style="color: var(--text-secondary); margin-bottom: 10px;">Выручка</p>
+          <p id="revenue" style="font-size: 24px; font-weight: bold; color: var(--warning);">0 ₽</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 30px;">
+      <h2 style="margin-bottom: 20px;">Быстрые действия</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="/seller/products" class="btn btn-primary btn-block" style="text-align: center;">
+          <i class="fas fa-plus"></i> Мои товары
+        </a>
+        <button class="btn btn-primary btn-block" onclick="showWithdrawalModal()">
+          <i class="fas fa-arrow-down"></i> Запросить вывод
+        </button>
+        <a href="/seller/sales" class="btn btn-secondary btn-block" style="text-align: center;">
+          <i class="fas fa-chart-bar"></i> История продаж
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    if (!requireSellerAuth()) return;
+
+    async function loadDashboard() {
+      try {
+        const data = await sellerAPI.getDashboard();
+        document.getElementById('totalOrders').textContent = data.stats.total_orders || 0;
+        document.getElementById('completedOrders').textContent = data.stats.completed_orders || 0;
+        document.getElementById('balance').textContent = (data.balance || 0).toFixed(2) + ' ₽';
+        document.getElementById('revenue').textContent = (data.stats.total_revenue || 0).toFixed(2) + ' ₽';
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+
+    function showWithdrawalModal() {
+      const amount = prompt('Введите сумму для вывода:');
+      if (amount && parseInt(amount) > 0) {
+        // Реализуйте логику вывода
+        showNotification('Функция в разработке', 'warning');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUserMenu();
+      loadDashboard();
+    });
+  </script>
+</body>
+</html>

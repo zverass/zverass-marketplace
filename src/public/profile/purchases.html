@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мои покупки - ZVERASS</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo"><i class="fas fa-bolt"></i> ZVERASS</a>
+        <nav><ul class="nav"><li><a href="/catalog">Каталог</a></li></ul></nav>
+        <div class="user-menu" id="userMenu"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="padding: 40px 20px;">
+    <h1>Мои покупки</h1>
+    <div id="ordersContainer" style="margin-top: 30px;"></div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    if (!requireAuth()) return;
+
+    async function loadOrders() {
+      try {
+        const data = await ordersAPI.getMyOrders(1, 50);
+        const container = document.getElementById('ordersContainer');
+        
+        if (!data.orders || data.orders.length === 0) {
+          container.innerHTML = '<p style="color: var(--text-secondary);">У вас нет покупок</p>';
+          return;
+        }
+
+        container.innerHTML = data.orders.map(order => `
+          <div class="card" style="margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; align-items: center;">
+              ${order.product_image ? `<img src="${order.product_image}" alt="${order.product_name}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover;">` : '<div style="width: 100px; height: 100px; background-color: var(--dark-tertiary); border-radius: 8px;"></div>'}
+              <div>
+                <h3>${order.product_name}</h3>
+                <p style="color: var(--text-secondary); margin: 5px 0;">от ${order.seller_name}</p>
+                <p style="color: var(--primary); font-weight: 600; margin: 5px 0;">Статус: ${order.status}</p>
+                <p style="color: var(--text-secondary); margin: 5px 0;">Номер: ${order.order_number}</p>
+              </div>
+              <div style="text-align: right;">
+                <p style="font-size: 18px; font-weight: 600; color: var(--primary);">${order.total_price.toFixed(2)} ₽</p>
+                <button class="btn btn-primary btn-small" onclick="window.location.href='/product/${order.product_id}'">Подробнее</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Error:', err);
+        document.getElementById('ordersContainer').innerHTML = '<p style="color: var(--danger);">Ошибка загрузки заказов</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUserMenu();
+      loadOrders();
+    });
+  </script>
+</body>
+</html>

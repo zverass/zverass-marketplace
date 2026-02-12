@@ -1,0 +1,30 @@
+{
+  "name": "zverass",
+  "version": "1.0.0",
+  "description": "ZVERASS площадка для торговли цифровыми товарами",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["marketplace", "playerok", "zverass"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.10.0",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.1.0",
+    "bcryptjs": "^2.4.3",
+    "multer": "^1.4.5-lts.1",
+    "ejs": "^3.1.9",
+    "cors": "^2.8.5",
+    "express-session": "^1.17.3",
+    "cookie-parser": "^1.4.6",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
